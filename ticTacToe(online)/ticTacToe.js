@@ -44,13 +44,11 @@ function setTurn(symbol, gameState) {
 }
 
 function setPlayerName(name, state, socket) {
-    let index = state.players.find(player => player.socket === socket).uid;
-    state.players[index].name = name;
+    state.players.find(player => player.socket === socket).name = name;
 }
 
 function getPlayerName(socket, state) {
-    let index = state.players.find(player => player.socket === socket).uid;
-    return state.players[index].name;
+    return state.players.find(player => player.socket === socket).name;
 }
 
 function getPlayerSymbol(socket, state) {
@@ -65,74 +63,63 @@ function isCorrectTurn(symbol, state) {
 }
 
 function move(pos, symbol, field, state, socket) {
-    if (getGameStatus(state)) {
-        if (isXO(symbol) && isCorrectPos(pos)) {
-            if (!checkField(field)) {
-                toggleGame(state);
+    if (isXO(symbol) && isCorrectPos(pos)) {
+        if (isCorrectTurn(getPlayerSymbol(socket, state), state)) {
+            if (isFree(field[pos[0]][[pos[1]]])) {
+                field[pos[0]][[pos[1]]] = symbol;
+                setTurn(symbol, state);
+                return ''
             } else {
-                if (isCorrectTurn(getPlayerSymbol(socket, state), state)) {
-                    if (isFree(field[pos[0]][[pos[1]]])) {
-                        field[pos[0]][[pos[1]]] = symbol;
-                        setTurn(symbol, state);
-                    } else {
-                        socket.write('Клетка занята\n');
-                    }
-                } else {
-                    socket.write('Не твой ход\n');
-                }
-                //socket.write(drawField(field));
-                return checkVictory(field, symbol, state, socket);
+                return 'Клетка занята\n';
             }
         } else {
-            //socket.write(drawField(field));
-            return 'Или не тем ходишь, или далеко хочешь\n';
+            return 'Не твой ход\n';
         }
     } else {
-        return socket.write('Игра остановлена. Ход невозможен\n');
+        return 'Или не тем ходишь, или далеко хочешь\n';
     }
 }
 
-function checkVictory(field, symbol, state, socket) {
-    let name = getPlayerName(socket, state);
+function checkVictory(field, symbol, state, name) {
     if (field[0][0] === symbol && field[0][1] === symbol && field[0][2] === symbol) {
-       toggleGame(state);
-        return socket.write(`${name} Победил!\n`)
+        toggleGame(state);
+        return `${name} Победил!\n`;
     }
     if (field[1][0] === symbol && field[1][1] === symbol && field[1][2] === symbol) {
-       toggleGame(state);
-        return socket.write(`${name} Победил!\n`)
+        toggleGame(state);
+        return `${name} Победил!\n`;
     }
     if (field[2][0] === symbol && field[2][1] === symbol && field[2][2] === symbol) {
         toggleGame(state);
-        return socket.write(`${name} Победил!\n`)
+        return `${name} Победил!\n`;
     }
 
     if (field[0][0] === symbol && field[1][0] === symbol && field[2][0] === symbol) {
         toggleGame(state);
-        return socket.write(`${name} Победил!\n`)
+        return `${name} Победил!\n`;
     }
     if (field[0][1] === symbol && field[1][1] === symbol && field[2][1] === symbol) {
         toggleGame(state);
-        return socket.write(`${name} Победил!\n`)
+        return `${name} Победил!\n`;
     }
     if (field[0][2] === symbol && field[1][2] === symbol && field[2][2] === symbol) {
-       toggleGame(state);
-        return socket.write(`${name} Победил!\n`)
+        toggleGame(state);
+        return `${name} Победил!\n`;
     }
 
     if (field[0][0] === symbol && field[1][1] === symbol && field[2][2] === symbol) {
         toggleGame(state);
-        return socket.write(`${name} Победил!\n`)
+        return `${name} Победил!\n`;
     }
     if (field[0][2] === symbol && field[1][1] === symbol && field[2][0] === symbol) {
         toggleGame(state);
-        return socket.write(`${name} Победил!\n`)
+        return `${name} Победил!\n`;
     }
     if (!checkField(field)) {
         toggleGame(state);
-        return socket.write('Ничья\n')
+        return 'Ничья\n';
     }
-    return socket.write(`А теперь Подожди)!\n`)
+    return '';
 }
 
 function checkField(field) {
@@ -148,7 +135,7 @@ function isFree(pos) {
 }
 
 function toggleGame(state) {
-    return state.play = !state.play;
+    return state.play = false
 }
 
 module.exports.getGameStatus = getGameStatus;
