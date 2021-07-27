@@ -1,49 +1,48 @@
 #!/usr/bin/env node
 
 const net = require('net');
-const clients = [];
+const players = [];
 const ticTacToe = require('./ticTacToe');
 
 const gameField = ticTacToe.generateGameField();
 const gameState = ticTacToe.createGameState();
 
 const server = net.createServer((socket) => {
+    socket.write('Welcome! to TicTacToe\n');
+    socket.setEncoding('utf8');
+    const port = socket.remotePort;
+    console.log('Client IP. Port: ', socket.remoteAddress);
+    console.log('Client connected. Port: ', port);
+    players.push(socket);
+    let uid = players.indexOf(socket);
+    ticTacToe.addPlayer(gameState, {socket: socket, uid: uid})
+    console.log(players.indexOf(socket))
+    socket.write('Твой символ: ' + ticTacToe.getPlayerSymbol(socket, gameState) + '\n');
 
-    if(clients.length < 2) { 
-        socket.write('Welcome! to TicTacToe\n');
-        socket.setEncoding('utf8');
-        const port = socket.remotePort;
-        console.log('Client IP. Port: ', socket.remoteAddress);
-        console.log('Client connected. Port: ', port);
 
-
+    if(players.length <= 2) { 
         socket.write(ticTacToe.drawField(gameField));
         socket.on('data', (message) => {
-            let index = clients.indexOf(socket);
-
-            clients.forEach(client => {
-                if (client !== socket) {
-                    client.write(ticTacToe.drawField(gameField));
-                }
-            })
-
             let text = message.replace('\n', '')
-            let position = text.split(' ');
-            console.log(text)
-            ticTacToe.move(position, 'x', gameField, gameState)
-            socket.write(ticTacToe.drawField(gameField));
+            let payload = text.split(' ');
+            let position = payload.slice(0,2);
+            ticTacToe.move(position, ticTacToe.getPlayerSymbol(socket, gameState), gameField, gameState, socket);
+            players.forEach(player => {
+                if (player.write !== socket) {
+                    player.write('Твой черед: ' + ticTacToe.getPlayerSymbol(player, gameState) + ' \n');
+                }
+                player.write(ticTacToe.drawField(gameField));
+            })
         });
-
         socket.on('close', () => {
-            let index = clients.indexOf(socket);
-            clients.splice(index, 1);
-            console.log('Closed', port);
+            //let index = players.indexOf(socket);
+            players.splice(uid, 1);
+            console.log('Игрок покинул нас...', socket.remoteAddress + ':' + port);
         })
-        clients.push(socket);
     } else {
         socket.write('Походу занято, сорян')
         socket.destroy();
     }
 });
 
-server.listen(1330, '127.0.0.1', () => {console.log('Listening on ', server.address().address)});
+server.listen(1330, '0.0.0.0', () => {console.log('Listening on ', server.address().address)});
