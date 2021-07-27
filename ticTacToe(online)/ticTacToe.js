@@ -80,8 +80,8 @@ function move(pos, symbol, field, state, socket) {
                 } else {
                     socket.write('Не твой ход\n');
                 }
-                socket.write(drawField(field));
-                return socket.write(checkVictory(field, symbol, state));
+                //socket.write(drawField(field));
+                return checkVictory(field, symbol, state, socket);
             }
         } else {
             //socket.write(drawField(field));
@@ -93,45 +93,46 @@ function move(pos, symbol, field, state, socket) {
 }
 
 function checkVictory(field, symbol, state, socket) {
+    let name = getPlayerName(socket, state);
     if (field[0][0] === symbol && field[0][1] === symbol && field[0][2] === symbol) {
-        toggleGame(state);
-        return socket.write(`${symbol} Победил!\n`)
+       toggleGame(state);
+        return socket.write(`${name} Победил!\n`)
     }
     if (field[1][0] === symbol && field[1][1] === symbol && field[1][2] === symbol) {
-        toggleGame(state);
-        return socket.write(`${symbol} Победил!\n`)
+       toggleGame(state);
+        return socket.write(`${name} Победил!\n`)
     }
     if (field[2][0] === symbol && field[2][1] === symbol && field[2][2] === symbol) {
         toggleGame(state);
-        return socket.write(`${symbol} Победил!\n`)
+        return socket.write(`${name} Победил!\n`)
     }
 
     if (field[0][0] === symbol && field[1][0] === symbol && field[2][0] === symbol) {
         toggleGame(state);
-        return socket.write(`${symbol} Победил!\n`)
+        return socket.write(`${name} Победил!\n`)
     }
     if (field[0][1] === symbol && field[1][1] === symbol && field[2][1] === symbol) {
         toggleGame(state);
-        return socket.write(`${symbol} Победил!\n`)
+        return socket.write(`${name} Победил!\n`)
     }
     if (field[0][2] === symbol && field[1][2] === symbol && field[2][2] === symbol) {
-        toggleGame(state);
-        return socket.write(`${symbol} Победил!\n`)
+       toggleGame(state);
+        return socket.write(`${name} Победил!\n`)
     }
 
     if (field[0][0] === symbol && field[1][1] === symbol && field[2][2] === symbol) {
         toggleGame(state);
-        return socket.write(`${symbol} Победил!\n`)
+        return socket.write(`${name} Победил!\n`)
     }
     if (field[0][2] === symbol && field[1][1] === symbol && field[2][0] === symbol) {
         toggleGame(state);
-        return socket.write(`${symbol} Победил!\n`)
+        return socket.write(`${name} Победил!\n`)
     }
     if (!checkField(field)) {
         toggleGame(state);
         return socket.write('Ничья\n')
     }
-    return `А теперь Подожди)!\n`
+    return socket.write(`А теперь Подожди)!\n`)
 }
 
 function checkField(field) {
