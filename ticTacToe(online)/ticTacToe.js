@@ -1,9 +1,9 @@
 
 function generateGameField() {
     return [
-        [' ',' ',' '],
-        [' ',' ',' '],
-        [' ',' ',' ']
+        [' ', ' ', ' '],
+        [' ', ' ', ' '],
+        [' ', ' ', ' ']
     ]
 }
 
@@ -25,7 +25,7 @@ function getGameStatus(state) {
 
 function drawField(field) {
     let result = [];
-    for(let i = 0; i < field.length; i += 1) {
+    for (let i = 0; i < field.length; i += 1) {
         result.push(field[i].join('|'))
     }
     return result.join('\n') + '\n';
@@ -43,21 +43,20 @@ function setTurn(symbol, gameState) {
     return gameState.turn = symbol === 'x' ? 'o' : 'x';
 }
 
-function getPlayers(state) {
-    return state.players;
-}
-
 function setPlayerName(name, state, socket) {
-    let index = state.players.indexOf(socket).socket;
+    let index = state.players.find(player => player.socket === socket).uid;
     state.players[index].name = name;
 }
 
-function getPlayerSymbol(socket, state) {
-    //console.log(state.players[0].id)
+function getPlayerName(socket, state) {
+    let index = state.players.find(player => player.socket === socket).uid;
+    return state.players[index].name;
+}
 
-    let index = state.players.find(player => player.socket === socket).id;
+function getPlayerSymbol(socket, state) {
+    let index = state.players.find(player => player.socket === socket).uid;
     let turn = (index + 1) % 2;
-    
+
     return turn === 1 ? 'x' : 'o';
 }
 
@@ -66,13 +65,13 @@ function isCorrectTurn(symbol, state) {
 }
 
 function move(pos, symbol, field, state, socket) {
-    if(getGameStatus(state)) {
-        if(isXO(symbol) && isCorrectPos(pos)) {
-            if(!checkField(field)) {
+    if (getGameStatus(state)) {
+        if (isXO(symbol) && isCorrectPos(pos)) {
+            if (!checkField(field)) {
                 toggleGame(state);
             } else {
-                if(isCorrectTurn(getPlayerSymbol(socket, state), state)) {
-                    if(isFree(field[pos[0]][[pos[1]]])) {
+                if (isCorrectTurn(getPlayerSymbol(socket, state), state)) {
+                    if (isFree(field[pos[0]][[pos[1]]])) {
                         field[pos[0]][[pos[1]]] = symbol;
                         setTurn(symbol, state);
                     } else {
@@ -81,7 +80,7 @@ function move(pos, symbol, field, state, socket) {
                 } else {
                     socket.write('Не твой ход\n');
                 }
-                //socket.write(drawField(field));
+                socket.write(drawField(field));
                 return socket.write(checkVictory(field, symbol, state));
             }
         } else {
@@ -94,41 +93,41 @@ function move(pos, symbol, field, state, socket) {
 }
 
 function checkVictory(field, symbol, state, socket) {
-    if(field[0][0] === symbol && field[0][1] === symbol && field[0][2] === symbol){
-        toggleGame(state);
-        return socket.write(`${symbol} Победил!\n`) 
-    }
-    if(field[1][0] === symbol && field[1][1] === symbol && field[1][2] === symbol){
+    if (field[0][0] === symbol && field[0][1] === symbol && field[0][2] === symbol) {
         toggleGame(state);
         return socket.write(`${symbol} Победил!\n`)
     }
-    if(field[2][0] === symbol && field[2][1] === symbol && field[2][2] === symbol){
+    if (field[1][0] === symbol && field[1][1] === symbol && field[1][2] === symbol) {
         toggleGame(state);
         return socket.write(`${symbol} Победил!\n`)
     }
-
-    if(field[0][0] === symbol && field[1][0] === symbol && field[2][0] === symbol){
-        toggleGame(state);
-        return socket.write(`${symbol} Победил!\n`)
-    }
-    if(field[0][1] === symbol && field[1][1] === symbol && field[2][1] === symbol){
-        toggleGame(state);
-        return socket.write(`${symbol} Победил!\n`)
-    }
-    if(field[0][2] === symbol && field[1][2] === symbol && field[2][2] === symbol){
+    if (field[2][0] === symbol && field[2][1] === symbol && field[2][2] === symbol) {
         toggleGame(state);
         return socket.write(`${symbol} Победил!\n`)
     }
 
-    if(field[0][0] === symbol && field[1][1] === symbol && field[2][2] === symbol){
+    if (field[0][0] === symbol && field[1][0] === symbol && field[2][0] === symbol) {
         toggleGame(state);
         return socket.write(`${symbol} Победил!\n`)
     }
-    if(field[0][2] === symbol && field[1][1] === symbol && field[2][0] === symbol){
+    if (field[0][1] === symbol && field[1][1] === symbol && field[2][1] === symbol) {
         toggleGame(state);
         return socket.write(`${symbol} Победил!\n`)
     }
-    if(!checkField(field)) {
+    if (field[0][2] === symbol && field[1][2] === symbol && field[2][2] === symbol) {
+        toggleGame(state);
+        return socket.write(`${symbol} Победил!\n`)
+    }
+
+    if (field[0][0] === symbol && field[1][1] === symbol && field[2][2] === symbol) {
+        toggleGame(state);
+        return socket.write(`${symbol} Победил!\n`)
+    }
+    if (field[0][2] === symbol && field[1][1] === symbol && field[2][0] === symbol) {
+        toggleGame(state);
+        return socket.write(`${symbol} Победил!\n`)
+    }
+    if (!checkField(field)) {
         toggleGame(state);
         return socket.write('Ничья\n')
     }
@@ -137,7 +136,7 @@ function checkVictory(field, symbol, state, socket) {
 
 function checkField(field) {
     let result = [];
-    for(let i = 0; i < field.length; i += 1) {
+    for (let i = 0; i < field.length; i += 1) {
         result.push(field[i].some(isFree));
     }
     return result.some((bool) => bool === true);
@@ -161,9 +160,10 @@ module.exports.move = move;
 module.exports.setTurn = setTurn;
 module.exports.toggleGame = toggleGame;
 module.exports.isFree = isFree;
-module.exports.isXO = isXO; 
+module.exports.isXO = isXO;
 module.exports.isCorrectPos = isCorrectPos;
 module.exports.isCorrectTurn = isCorrectTurn;
 module.exports.addPlayer = addPlayer;
 module.exports.getPlayerSymbol = getPlayerSymbol;
 module.exports.setPlayerName = setPlayerName;
+module.exports.getPlayerName = getPlayerName;
