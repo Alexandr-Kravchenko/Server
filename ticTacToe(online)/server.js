@@ -23,30 +23,41 @@ const server = net.createServer((socket) => {
                 if (text.length > 0) {
                     let name = ticTacToe.getPlayerName(socket, gameState);
                     let symbol = ticTacToe.getPlayerSymbol(socket, gameState);
-                    if (name !== undefined) {
-                        if (players.length === 2) {
-                            let position = text.split(' ').slice(0, 2);
-                            socket.write(ticTacToe.move(position, symbol, gameField, gameState, socket));
+                    let isExistUnnamedPlayer = ticTacToe.getPlayers(gameState).some(player => player.name === undefined);
+                    if (isExistUnnamedPlayer) {
+                        if (name === undefined) {
+                            ticTacToe.setPlayerName(text, gameState, socket);
                             players.forEach(player => {
                                 if (player !== socket) {
-                                    player.write(`Твой черед: ${ticTacToe.getPlayerName(player, gameState)}\n`);
-                                } else {
-                                    player.write('А теперь подожди!\n');
+                                    player.write(`${text} присоединился\n`);
                                 }
-                                player.write(ticTacToe.drawField(gameField));
-                                player.write(ticTacToe.checkVictory(gameField, symbol, gameState, name));
                             })
+                            if (symbol === 'x') {
+                                socket.write(`${text} ты '${symbol}' ходишь первым \n`);
+                            } else {
+                                socket.write(`${text} ты '${symbol}' ожидай хода первого игрока\n`);
+                            }
+                            socket.write(ticTacToe.drawField(gameField));
+                        } else {
+                            socket.write('Подожди, пока второй игрок представится\n')
+                        }
+                    } else {
+                        if (players.length === 2) {
+                            let position = text.split(' ').slice(0, 2);
+                            if(ticTacToe.move(position, symbol, gameField, gameState, socket)) {
+                                players.forEach(player => {
+                                    if (player !== socket) {
+                                        let name = ticTacToe.getPlayerName(player, gameState);
+                                        player.write(`Твой черед: ${name}\n`);
+                                        socket.write(`А теперь подожди, ${name} думает что и куда\n`);
+                                    }
+                                    player.write(ticTacToe.drawField(gameField));
+                                    player.write(ticTacToe.checkVictory(gameField, symbol, gameState, name));
+                                })
+                            }
                         } else {
                             socket.write('Ожидаем второго игрока\n');
                         }
-                    } else {
-                        ticTacToe.setPlayerName(text, gameState, socket);
-                        if (symbol === 'x') {
-                            socket.write(`${text} ты '${symbol}' ходишь первым \n`);
-                        } else {
-                            socket.write(`${text} ты '${symbol}' ожидай хода первого игрока\n`);
-                        }
-                        socket.write(ticTacToe.drawField(gameField));
                     }
                 }
             } else {
@@ -60,8 +71,9 @@ const server = net.createServer((socket) => {
         })
     } else {
         socket.write('Походу занято, сорян\n');
+        players.splice(uid, 1);
         socket.destroy();
     }
 });
 
-server.listen(1330, '127.0.0.1', () => { console.log('Listening on ', server.address().address) });
+server.listen(1330, '0.0.0.0', () => { console.log('Listening on ', server.address().address) });

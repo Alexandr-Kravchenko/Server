@@ -58,8 +58,20 @@ function getPlayerSymbol(socket, state) {
     return turn === 1 ? 'x' : 'o';
 }
 
+function getPlayers(state) {
+    return state.players;
+}
+
 function isCorrectTurn(symbol, state) {
     return state.turn === symbol;
+}
+
+function resetField(field) {
+    return fied = generateGameField();
+}
+
+function resetState(state) {
+    return state = createGameState()
 }
 
 function move(pos, symbol, field, state, socket) {
@@ -68,55 +80,76 @@ function move(pos, symbol, field, state, socket) {
             if (isFree(field[pos[0]][[pos[1]]])) {
                 field[pos[0]][[pos[1]]] = symbol;
                 setTurn(symbol, state);
-                return ''
+                return true;
             } else {
-                return 'Клетка занята\n';
+                socket.write('Клетка занята, будь внимательнее\n');
+                return false;
             }
         } else {
-            return 'Не твой ход\n';
+            socket.write('Куда ты?! Не твой ход же\n');
+            return false;
         }
     } else {
-        return 'Или не тем ходишь, или далеко хочешь\n';
+        socket.write('Позиция введена некорректно. Пример "0 0"\n');
+        return false;
     }
 }
 
 function checkVictory(field, symbol, state, name) {
     if (field[0][0] === symbol && field[0][1] === symbol && field[0][2] === symbol) {
-        toggleGame(state);
+        resetState(state);
+        resetField(field);
+        //toggleGame(state);
         return `${name} Победил!\n`;
     }
     if (field[1][0] === symbol && field[1][1] === symbol && field[1][2] === symbol) {
-        toggleGame(state);
+        resetState(state);
+        resetField(field);
+        //toggleGame(state);
         return `${name} Победил!\n`;
     }
     if (field[2][0] === symbol && field[2][1] === symbol && field[2][2] === symbol) {
-        toggleGame(state);
+        resetState(state);
+        resetField(field);
+        //toggleGame(state);
         return `${name} Победил!\n`;
     }
 
     if (field[0][0] === symbol && field[1][0] === symbol && field[2][0] === symbol) {
-        toggleGame(state);
+        resetState(state);
+        resetField(field);
+        //toggleGame(state);
         return `${name} Победил!\n`;
     }
     if (field[0][1] === symbol && field[1][1] === symbol && field[2][1] === symbol) {
-        toggleGame(state);
+        resetState(state);
+        resetField(field);
+        //toggleGame(state);
         return `${name} Победил!\n`;
     }
     if (field[0][2] === symbol && field[1][2] === symbol && field[2][2] === symbol) {
-        toggleGame(state);
+        resetState(state);
+        resetField(field);
+        //toggleGame(state);
         return `${name} Победил!\n`;
     }
 
     if (field[0][0] === symbol && field[1][1] === symbol && field[2][2] === symbol) {
-        toggleGame(state);
+        resetState(state);
+        resetField(field);
+        //toggleGame(state);
         return `${name} Победил!\n`;
     }
     if (field[0][2] === symbol && field[1][1] === symbol && field[2][0] === symbol) {
-        toggleGame(state);
+        resetState(state);
+        resetField(field);
+        //toggleGame(state);
         return `${name} Победил!\n`;
     }
     if (!checkField(field)) {
-        toggleGame(state);
+        resetState(state);
+        resetField(field);
+        //toggleGame(state);
         return 'Ничья\n';
     }
     return '';
@@ -155,3 +188,6 @@ module.exports.addPlayer = addPlayer;
 module.exports.getPlayerSymbol = getPlayerSymbol;
 module.exports.setPlayerName = setPlayerName;
 module.exports.getPlayerName = getPlayerName;
+module.exports.getPlayers = getPlayers;
+module.exports.resetField = resetField;
+module.exports.resetState = resetState;
