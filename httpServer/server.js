@@ -48,4 +48,4 @@ server.listen(port, () => {
 
 // curl localhost:3000/plural?number=2&forms=person,people,people
 
-// curl -X POST localhost:5000/frequency --data-raw "Little red fox jumps over logs. Fox is red"
+// curl -X POST localhost:3000/frequency --data-raw "Little red fox jumps over logs. Fox is red"

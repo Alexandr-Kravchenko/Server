@@ -32,4 +32,4 @@ server.listen(port, () => {
     console.log(`Server started at localhost: ${port}`);
 })
 
-// curl localhost:3000 -d '{"name": "Update task" }' -H "Content-Type: application/json"
+// curl localhost:3000/tasks -d '{"name": "Update task" }' -H "Content-Type: application/json"
