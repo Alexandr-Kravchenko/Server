@@ -3,19 +3,29 @@ const app = express();
 
 app.use(express.json());
 
-const port = 3000;
+const inc = (init = 0) => () => ++init
+
+const genId = inc();
 
 const tasks = [
-    { id: 1, name: 'WakeUP' },
-    { id: 2, name: 'Survive' }
+    { id: genId(), name: 'WakeUP' },
+    { id: genId(), name: 'Survive' }
 ];
+
+const createTask = data => {
+    return {
+        id: genId(),
+        name: data.name,
+        done: false
+    }
+}
 
 app.get('/tasks', (req, res) => {
     res.json(tasks);
 });
 
 app.post('/tasks', (req, res) => {
-    const task = req.body;
+    const task = createTask(req.body);
     tasks.push(task);
     res.json(task);
 });
@@ -31,7 +41,7 @@ app.patch('/tasks/:id', (req, res) => {
     }
 });
 
-
+const port = 3000;
 
 app.listen(port, () => {
     console.log(`Server started at localhost: ${port}`)
