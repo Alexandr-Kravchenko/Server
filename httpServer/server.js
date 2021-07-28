@@ -17,11 +17,10 @@ const server = http.createServer((req, res) => {
         res.writeHead(200, { 'Content-Type': 'application/json' }).end(JSON.stringify(req.headers))
 
     } else if (parsedUrl.pathname === '/plural') {
-        let query = parsedUrl.query
-        let forms = query.forms.split(',')
+        let query = parsedUrl.query;
+        let forms = query.forms.split(',');
         let result = pl(query.number, forms[0], forms[1], forms[2]);
-        res.end(result);
-        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.writeHead(200, { 'Content-Type': 'text/html' }).end(result);
 
     } else if (req.url === '/frequency') {
         if (req.method === 'POST') {
@@ -37,10 +36,16 @@ const server = http.createServer((req, res) => {
     } else {
         res.writeHead(404, 'Not Found').end();
     }
-
 })
+
 const port = 3000;
 
 server.listen(port, () => {
     console.log(`Server started at localhost: ${port}`);
 })
+
+// curl localhost:3000/headers
+
+// curl localhost:3000/plural?number=2&forms=person,people,people
+
+// curl -X POST localhost:5000/frequency --data-raw "Little red fox jumps over logs. Fox is red"

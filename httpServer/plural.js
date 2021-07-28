@@ -14,6 +14,4 @@ function pl(number, one, few, many) {
     return `${number} ${many}`;
 }
 
-//console.log(pl(0, 'кнопка', 'кнопки' , 'кнопок'))
-
 module.exports = pl;

@@ -99,57 +99,57 @@ function checkVictory(field, symbol, state, name) {
     if (field[0][0] === symbol && field[0][1] === symbol && field[0][2] === symbol) {
         resetState(state);
         resetField(field);
-        //toggleGame(state);
+        toggleGame(state);
         return `${name} Победил!\n`;
     }
     if (field[1][0] === symbol && field[1][1] === symbol && field[1][2] === symbol) {
         resetState(state);
         resetField(field);
-        //toggleGame(state);
+        toggleGame(state);
         return `${name} Победил!\n`;
     }
     if (field[2][0] === symbol && field[2][1] === symbol && field[2][2] === symbol) {
         resetState(state);
         resetField(field);
-        //toggleGame(state);
+        toggleGame(state);
         return `${name} Победил!\n`;
     }
 
     if (field[0][0] === symbol && field[1][0] === symbol && field[2][0] === symbol) {
         resetState(state);
         resetField(field);
-        //toggleGame(state);
+        toggleGame(state);
         return `${name} Победил!\n`;
     }
     if (field[0][1] === symbol && field[1][1] === symbol && field[2][1] === symbol) {
         resetState(state);
         resetField(field);
-        //toggleGame(state);
+        toggleGame(state);
         return `${name} Победил!\n`;
     }
     if (field[0][2] === symbol && field[1][2] === symbol && field[2][2] === symbol) {
         resetState(state);
         resetField(field);
-        //toggleGame(state);
+        toggleGame(state);
         return `${name} Победил!\n`;
     }
 
     if (field[0][0] === symbol && field[1][1] === symbol && field[2][2] === symbol) {
         resetState(state);
         resetField(field);
-        //toggleGame(state);
+        toggleGame(state);
         return `${name} Победил!\n`;
     }
     if (field[0][2] === symbol && field[1][1] === symbol && field[2][0] === symbol) {
         resetState(state);
         resetField(field);
-        //toggleGame(state);
+        toggleGame(state);
         return `${name} Победил!\n`;
     }
     if (!checkField(field)) {
         resetState(state);
         resetField(field);
-        //toggleGame(state);
+        toggleGame(state);
         return 'Ничья\n';
     }
     return '';

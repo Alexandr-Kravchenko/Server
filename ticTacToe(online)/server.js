@@ -21,11 +21,10 @@ const server = net.createServer((socket) => {
             if (ticTacToe.getGameStatus(gameState)) {
                 let text = message.replace('\n', '').replace('\r', '');
                 if (text.length > 0) {
-                    let name = ticTacToe.getPlayerName(socket, gameState);
                     let symbol = ticTacToe.getPlayerSymbol(socket, gameState);
                     let isExistUnnamedPlayer = ticTacToe.getPlayers(gameState).some(player => player.name === undefined);
                     if (isExistUnnamedPlayer) {
-                        if (name === undefined) {
+                        if (ticTacToe.getPlayerName(socket, gameState) === undefined) {
                             ticTacToe.setPlayerName(text, gameState, socket);
                             players.forEach(player => {
                                 if (player !== socket) {
@@ -44,15 +43,15 @@ const server = net.createServer((socket) => {
                     } else {
                         if (players.length === 2) {
                             let position = text.split(' ').slice(0, 2);
-                            if(ticTacToe.move(position, symbol, gameField, gameState, socket)) {
+                            if (ticTacToe.move(position, symbol, gameField, gameState, socket)) {
                                 players.forEach(player => {
                                     if (player !== socket) {
                                         let name = ticTacToe.getPlayerName(player, gameState);
                                         player.write(`Твой черед: ${name}\n`);
-                                        socket.write(`А теперь подожди, ${name} думает что и куда\n`);
+                                        if (ticTacToe.getGameStatus(gameState)) socket.write(`А теперь подожди, ${name} думает что и куда\n`);
                                     }
                                     player.write(ticTacToe.drawField(gameField));
-                                    player.write(ticTacToe.checkVictory(gameField, symbol, gameState, name));
+                                    player.write(ticTacToe.checkVictory(gameField, symbol, gameState, ticTacToe.getPlayerName(socket, gameState)));
                                 })
                             }
                         } else {
