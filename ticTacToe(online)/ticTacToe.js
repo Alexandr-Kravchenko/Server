@@ -67,7 +67,7 @@ function isCorrectTurn(symbol, state) {
 }
 
 function resetField(field) {
-    return fied = generateGameField();
+    return field = generateGameField();
 }
 
 function resetState(state) {
@@ -171,23 +171,8 @@ function toggleGame(state) {
     return state.play = false
 }
 
-module.exports.getGameStatus = getGameStatus;
-module.exports.createGameState = createGameState;
-module.exports.generateGameField = generateGameField;
-module.exports.drawField = drawField;
-module.exports.checkField = checkField;
-module.exports.checkVictory = checkVictory;
-module.exports.move = move;
-module.exports.setTurn = setTurn;
-module.exports.toggleGame = toggleGame;
-module.exports.isFree = isFree;
-module.exports.isXO = isXO;
-module.exports.isCorrectPos = isCorrectPos;
-module.exports.isCorrectTurn = isCorrectTurn;
-module.exports.addPlayer = addPlayer;
-module.exports.getPlayerSymbol = getPlayerSymbol;
-module.exports.setPlayerName = setPlayerName;
-module.exports.getPlayerName = getPlayerName;
-module.exports.getPlayers = getPlayers;
-module.exports.resetField = resetField;
-module.exports.resetState = resetState;
+export {
+    getGameStatus, createGameState, generateGameField, drawField, checkField,
+    checkVictory, move, setTurn, toggleGame, isFree, isXO, isCorrectPos, isCorrectTurn, addPlayer, getPlayerSymbol,
+    setPlayerName, getPlayerName, getPlayers, resetField, resetState
+}

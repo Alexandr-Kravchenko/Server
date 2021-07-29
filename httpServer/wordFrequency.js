@@ -1,4 +1,4 @@
-function wordFrequency(text) {
+export default function wordFrequency(text) {
     let sepGroup = /((\s(\k<grp>|-)\s)|(?<grp>[\r\n\s,\.?!;:"\(\)]+)|((\k<grp>|-)\s)|(\s(\k<grp>|-))|('(?=\s)|(?<=\s)'))(?!$)/gm;
     let words = text.toLowerCase().replace(/[\r\n\s,\.?!;:'"\(\)]+$/gm, '').replace(sepGroup, ' ').split(' ');
     const wordsMap = new Map();
@@ -11,5 +11,3 @@ function wordFrequency(text) {
     }
     return wordsMap;
 }
-
-module.exports = wordFrequency;

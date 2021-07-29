@@ -1,4 +1,4 @@
-const http = require('http');
+import http from 'http';
 
 function logRequest({ method, url }) {
     console.log(`[${new Date().toISOString()}] ${method} ${url}`)

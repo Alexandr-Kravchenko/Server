@@ -28,7 +28,7 @@ app.get('/api/todoitem/:id', (req, res) => {
 app.post('/api/todoitem', (req, res) => {
     const todo = createTodo(req.body);
     todolist.push(todo);
-    res.json(todo);
+    res.status(201).json(todo);
 });
 
 app.patch('/api/todoitem/:id', (req, res) => {

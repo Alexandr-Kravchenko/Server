@@ -1,4 +1,4 @@
-function pl(number, one, few, many) {
+export default function pl(number, one, few, many) {
     let n = Math.abs(number);
     n = number % 100;
     if (n >= 5 && n <= 20) {
@@ -13,5 +13,3 @@ function pl(number, one, few, many) {
     }
     return `${number} ${many}`;
 }
-
-module.exports = pl;

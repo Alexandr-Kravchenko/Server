@@ -1,7 +1,7 @@
-const http = require('http');
-const url = require('url');
-const pl = require('./plural');
-const wordFrequency = require('./wordFrequency');
+import http from 'http';
+import url from 'url';
+import pl from './plural.js';
+import wordFrequency from './wordFrequency.js';
 
 function mapToObject(map) {
     const obj = {};
@@ -18,17 +18,16 @@ const server = http.createServer((req, res) => {
 
     } else if (parsedUrl.pathname === '/plural') {
         let query = parsedUrl.query;
-        let forms = query.forms.split(',');
+        let forms = query.forms.split(',')
         let result = pl(query.number, forms[0], forms[1], forms[2]);
-        res.writeHead(200, { 'Content-Type': 'text/html' }).end(result);
+        res.writeHead(200, { 'Content-Type': 'application/json' }).end(JSON.stringify(result));
 
     } else if (req.url === '/frequency') {
         if (req.method === 'POST') {
-            let str = '';
-            req.on('data', chunk => str = chunk.toString());
+            let str = ''; // array
+            req.on('data', chunk => str += chunk.toString());
             req.on('end', () => {
-                let result = mapToObject(wordFrequency(str));
-                res.writeHead(201, { 'Content-Type': 'application/json' }).end(JSON.stringify(result))
+                res.writeHead(201, { 'Content-Type': 'application/json' }).end(JSON.stringify(mapToObject(wordFrequency(str))))
             });
         } else {
             res.writeHead(404, 'Not Found').end();
@@ -46,6 +45,6 @@ server.listen(port, () => {
 
 // curl localhost:3000/headers
 
-// curl localhost:3000/plural?number=2&forms=person,people,people
+// curl 'localhost:3000/plural?number=2&forms=person,people,people'
 
 // curl -X POST localhost:3000/frequency --data-raw "Little red fox jumps over logs. Fox is red"
