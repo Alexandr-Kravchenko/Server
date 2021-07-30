@@ -1,5 +1,5 @@
 import {
-  find, create, findById, findByIdAndUpdate
+  find, create, findById, findByIdAndUpdate, findByIdAndReplace
 } from '../models/Todoitem.js'
 
 class TodoitemController {
@@ -14,6 +14,9 @@ class TodoitemController {
   }
   updateById(id, todo) {
     return findByIdAndUpdate(id, todo)
+  }
+  replaceById(id, todo) {
+    return findByIdAndReplace(id, todo)
   }
 }
 

@@ -20,6 +20,11 @@ router.post('/', (req, res) => {
     res.status(201).json(controller.create(req.body.title));
 });
 
+router.put('/:id', (req, res) => {
+    console.log(req.body)
+    res.status(201).json(controller.replaceById(req.params.id, req.body));
+});
+
 router.patch('/:id', (req, res) => {
     let todo = controller.updateById(req.params.id, req.body);
     if (todo) {

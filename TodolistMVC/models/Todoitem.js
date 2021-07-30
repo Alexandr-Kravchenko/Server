@@ -22,16 +22,29 @@ function findById(id) {
   if (todoId > Todoitem.length) {
     return false;
   } else {
-    return Todoitem.find(todo => todo.id === parseInt(todoId));
+    return Todoitem.find(todo => todo.id === todoId);
   }
 }
 
-function findByIdAndUpdate(id, todo) { 
+function findByIdAndUpdate(id, todo) {
   let todoId = parseInt(id);
   if (todoId > Todoitem.length) {
     return false;
   } else {
-    return Object.assign(findById(parseInt(id)), todo);
+    return Object.assign(findById(todoId), todo);
+  }
+}
+
+function findByIdAndReplace(id, todo) {
+  let todoId = parseInt(id);
+
+  if (todoId > Todoitem.length) {
+    return false;
+  } else {
+    let tempTodo = findById(todoId);
+    tempTodo.title = todo.title !== undefined ? todo.title : 'todo name';
+    tempTodo.done = todo.done !== undefined ? todo.done : false;
+    return tempTodo
   }
 }
 
@@ -40,5 +53,5 @@ function findByIdAndUpdate(id, todo) {
 //add validation of inputed data
 
 export {
-  find, create, findById, findByIdAndUpdate
+  find, create, findById, findByIdAndUpdate, findByIdAndReplace
 }
