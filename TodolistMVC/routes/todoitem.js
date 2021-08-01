@@ -1,37 +1,13 @@
 import express from 'express';
-import controller from '../controllers/TodoitemController.js';
+import controller from '../controllers/TodolistController.js';
 
-const router = express.Router()
+const router = express.Router({mergeParams: true});
 
-router.get('/', function(req, res) {
-    res.json(controller.find())
+router.get('/:todoId', (req, res) => {
+    const id = parseInt(req.params.todoId)
+    const listId = req.params.listId
+    //const listId = parseInt(req.params.listId)
+    res.json(`id: ${id} + listId: ${listId}`)
 })
-
-router.get('/:id', (req, res) => {
-    let todo = controller.findById(req.params.id);
-    if (todo) {
-        res.json(todo);
-    } else {
-        res.status(404).json({ error: 'Sorry, but requested todo was not found' })
-    }
-});
-
-router.post('/', (req, res) => {
-    res.status(201).json(controller.create(req.body.title));
-});
-
-router.put('/:id', (req, res) => {
-    console.log(req.body)
-    res.status(201).json(controller.replaceById(req.params.id, req.body));
-});
-
-router.patch('/:id', (req, res) => {
-    let todo = controller.updateById(req.params.id, req.body);
-    if (todo) {
-        res.json(todo);
-    } else {
-        res.status(404).json({ error: 'Sorry, but requested todo was not found' })
-    }
-});
 
 export default router;

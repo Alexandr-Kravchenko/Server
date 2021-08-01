@@ -1,8 +1,8 @@
 import express from 'express';
 const router = express.Router();
 
-import todoitem from './todoitem.js';
+import todolists from './todolists.js';
 
-router.use('/todoitem', todoitem);
+router.use('/todolists', todolists);
 
 export default router
