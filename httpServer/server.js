@@ -24,10 +24,11 @@ const server = http.createServer((req, res) => {
 
     } else if (req.url === '/frequency') {
         if (req.method === 'POST') {
-            let str = ''; // array
-            req.on('data', chunk => str += chunk.toString());
+            let data = [];
+            req.on('data', chunk => data.push(chunk.toString()));
             req.on('end', () => {
-                res.writeHead(201, { 'Content-Type': 'application/json' }).end(JSON.stringify(mapToObject(wordFrequency(str))))
+                let result = data.join('')
+                res.writeHead(201, { 'Content-Type': 'application/json' }).end(JSON.stringify(mapToObject(wordFrequency(result))))
             });
         } else {
             res.writeHead(404, 'Not Found').end();
