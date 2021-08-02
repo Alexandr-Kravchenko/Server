@@ -1,35 +1,37 @@
 import TodolistModel from '../models/Todolist.js'
 
+let TodoModel = new TodolistModel();
+
 class ListController {
   createTodo(id, title) {
-    return TodolistModel.createTodo(id, title)
+    return TodoModel.createTodo(id, title)
   }
   findTodoById(listId, todoId) {
-    return TodolistModel.findTodoById(listId, todoId)
+    return TodoModel.findTodoById(listId, todoId)
   }
   updateTodoById(listId, todoId, todo) {
-    return TodolistModel.findTodoByIdAndUpdate(listId, todoId, todo)
+    return TodoModel.findTodoByIdAndUpdate(listId, todoId, todo)
   }
   replaceTodoById(listId, todoId, todo) {
-    return TodolistModel.findTodoByIdAndReplace(listId, todoId, todo)
+    return TodoModel.findTodoByIdAndReplace(listId, todoId, todo)
   }
   removeTodoById(listId, todoId) {
-    return TodolistModel.removeTodoById(listId, todoId);
+    return TodoModel.removeTodoById(listId, todoId);
   }
   findAllTodoByListId(listId) {
-    return TodolistModel.findAllTodoByListId(listId);
+    return TodoModel.findAllTodoByListId(listId);
   }
   findAllLists() {
-    return TodolistModel.findAllLists()
+    return TodoModel.findAllLists()
   }
   createList(title) {
-    return TodolistModel.createList(title);
+    return TodoModel.createList(title);
   }
   findListById(id) {
-    return TodolistModel.findListById(id);
+    return TodoModel.findListById(id);
   }
   removeListById(id) {
-    return TodolistModel.removeListById(id);
+    return TodoModel.removeListById(id);
   }
 }
 

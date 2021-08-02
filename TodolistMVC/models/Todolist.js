@@ -2,7 +2,7 @@ const inc = (init = 0) => () => ++init;
 
 const genListId = inc();
 
-class TodolistModel {
+export default class TodolistModel {
     constructor(list = []) {
         this.todolist = list;
     }
@@ -135,4 +135,4 @@ class TodolistModel {
 
 }
 
-export default new TodolistModel();
+// export default new TodolistModel();
