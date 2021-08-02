@@ -3,8 +3,8 @@ const inc = (init = 0) => () => ++init;
 const genListId = inc();
 
 class TodolistModel {
-    constructor() {
-        this.todolist = [];
+    constructor(list = []) {
+        this.todolist = list;
     }
 
     createList(title) {
