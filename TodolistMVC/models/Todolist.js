@@ -39,9 +39,10 @@ class TodolistModel {
     let foundList = this.findListById(listId);
     let id = parseInt(todoId);
     if (foundList) {
-      let foundTodoId = this.todolist.findIndex(todo => todo.id === todoId);
+      let foundTodoId = foundList.list.findIndex(todo => todo.id === id);
       if (foundTodoId !== -1) {
-        foundList.splice(foundTodoId, 1)
+        console.log(foundTodoId)
+        foundList.list.splice(foundTodoId, 1)
         return true;
       } else {
         return false;
@@ -57,7 +58,7 @@ class TodolistModel {
     return { listId: listId };
   }
 
-  find() {
+  findAllLists() {
     return this.todolist;
   }
 
@@ -70,6 +71,17 @@ class TodolistModel {
       return false;
     }
   }
+
+  findAllTodoByListId(id) {
+    let listId = parseInt(id);
+    let result = this.todolist.find(list => list.id === listId);
+    if (result !== undefined) {
+      return result.list;
+    } else {
+      return false;
+    }
+  }
+
 
   findTodoById(listId, todoId) {
     let foundList = this.findListById(listId);
@@ -90,6 +102,7 @@ class TodolistModel {
     let foundTodo = this.findTodoById(listId, todoId);
     if (foundTodo) {
       todo.done = todo.done !== undefined ? this.getBool(todo.done) : foundTodo.done;
+      todo.title = todo.title ?? foundTodo.title; 
       return Object.assign(foundTodo, todo);
     } else {
       return false;
@@ -99,7 +112,7 @@ class TodolistModel {
   findTodoByIdAndReplace(listId, todoId, todo) {
     let foundTodo = this.findTodoById(listId, todoId);
     if (foundTodo) {
-      foundTodo.title = todo.title !== undefined ? todo.title : 'default todo\'s name';
+      foundTodo.title = todo.title ?? 'default todo\'s name';
       foundTodo.done = todo.done !== undefined ? this.getBool(todo.done) : false;
       return foundTodo
     } else {
@@ -112,7 +125,6 @@ class TodolistModel {
     if (type === 'boolean') {
       return data
     } else if (type === 'string') {
-      console.log(type);
       return data.toLowerCase() === 'true' ? true :
         data.toLowerCase() === 'false' ? false : false;
     } else {
