@@ -1,9 +1,6 @@
 import TodolistModel from '../models/Todolist.js'
 
-class TodolistController {
-  findAllLists() {
-    return TodolistModel.findAllLists()
-  }
+class ListController {
   createTodo(id, title) {
     return TodolistModel.createTodo(id, title)
   }
@@ -16,6 +13,15 @@ class TodolistController {
   replaceTodoById(listId, todoId, todo) {
     return TodolistModel.findTodoByIdAndReplace(listId, todoId, todo)
   }
+  removeTodoById(listId, todoId) {
+    return TodolistModel.removeTodoById(listId, todoId);
+  }
+  findAllTodoByListId(listId) {
+    return TodolistModel.findAllTodoByListId(listId);
+  }
+  findAllLists() {
+    return TodolistModel.findAllLists()
+  }
   createList(title) {
     return TodolistModel.createList(title);
   }
@@ -25,12 +31,6 @@ class TodolistController {
   removeListById(id) {
     return TodolistModel.removeListById(id);
   }
-  removeTodoById(listId, todoId) {
-    return TodolistModel.removeTodoById(listId, todoId);
-  }
-  findAllTodoByListId(listId) {
-    return TodolistModel.findAllTodoByListId(listId);
-  }
 }
 
-export default new TodolistController();
+export default new ListController();

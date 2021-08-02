@@ -1,5 +1,5 @@
 import express from 'express';
-import controller from '../controllers/TodolistController.js';
+import controller from '../../controllers/TodolistController.js';
 import todo from './todo.js'
 
 const router = express.Router()
@@ -14,7 +14,7 @@ router.route('/:listId?')
     .delete((req, res) => {
         let status = controller.removeListById(req.params.listId);
         if (status) {
-            res.status(204);
+            res.status(200).json(status);
         } else {
             res.status(404).json({ error: 'Sorry, but requested todo was not found' });
         }
