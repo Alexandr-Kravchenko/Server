@@ -1,4 +1,4 @@
-import TodolistModel from '../models/Todolist.js'
+import TodolistModel from '../models/TodolistDB.js'
 
 let TodoModel = new TodolistModel();
 

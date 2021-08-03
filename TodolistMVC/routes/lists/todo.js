@@ -13,12 +13,15 @@ router.route('/')
         }
     })
     .post((req, res) => {
-        let list = controller.createTodo(req.params.listId, req.body.title);
-        if (list) {
-            res.json(list);
-        } else {
-            res.status(404).json({ error: 'Sorry, but requested todo was not found' })
-        }
+        controller
+            .createTodo(req.params.listId, req.body.title)
+            .then(data => res.json(data));
+
+        /*         if (list) {
+                    res.json(list);
+                } else {
+                    res.status(404).json({ error: 'Sorry, but requested todo was not found' })
+                } */
     });
 
 router.route('/:todoId')
