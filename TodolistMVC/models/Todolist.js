@@ -1,14 +1,13 @@
-const inc = (init = 0) => () => ++init;
-
-const genListId = inc();
-
 export default class TodolistModel {
     constructor(list = []) {
         this.todolist = list;
     }
 
+    inc = (init = 0) => () => ++init;
+
     createList(title) {
-        let listId = genListId();
+        let genId = this.inc(this.todolist.length);
+        let listId = genId();
         this.todolist.push({ id: listId, title, list: [] });
         return { listId: listId };
     }
@@ -40,7 +39,7 @@ export default class TodolistModel {
 
     createTodo(id, title) {
         let foundList = this.findListById(id);
-        const genTodoId = inc(foundList.list.length);
+        const genTodoId = this.inc(foundList.list.length);
         if (foundList) {
             let todo = {
                 id: genTodoId(),
@@ -60,7 +59,6 @@ export default class TodolistModel {
         if (foundList) {
             let foundTodoId = foundList.list.findIndex(todo => todo.id === id);
             if (foundTodoId !== -1) {
-                console.log(foundTodoId)
                 foundList.list.splice(foundTodoId, 1)
                 return true;
             } else {
