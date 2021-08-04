@@ -1,0 +1,22 @@
+{
+  "name": "todolist",
+  "version": "1.0.0",
+  "description": "todolist-mvc using db",
+  "main": "server.js",
+  "scripts": {
+    "start": "nodemon server.js",
+    "test": "jest"
+  },
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/core": "^7.14.8",
+    "@babel/preset-env": "^7.14.8"
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "jest": "^27.0.6",
+    "pg": "^8.7.1"
+  },
+  "type": "module"
+}
