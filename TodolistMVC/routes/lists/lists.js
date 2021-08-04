@@ -6,39 +6,21 @@ const router = express.Router()
 
 router.route('/:listId?')
     .get((req, res) => {
-        if(req.params.listId) {
-            controller
-                .findListById(req.params.listId)
-                .then(data => {
-                    res.status(201).json(data)
-                })
+        if (req.params.listId) {
+            res.status(201).json(controller.findListById(req.params.listId))
         } else {
-            controller
-                .findAllLists()
-                .then(data => {
-                    res.status(201).json(data)
-                })
+            res.status(201).json(controller.findAllLists())
         }
     })
     .post((req, res) => {
-        controller
-            .createList(req.body.title)
-            .then(data => {
-                res.status(201).json(data)
-            });
+        res.status(201).json(controller.createList(req.body.title))
     })
     .delete((req, res) => {
-        controller
-            .removeListById(req.params.listId)
-            .then(data => {
-                res.status(201).json(data)
-            });
-
-        /*         if (status) {
-                    res.status(200).json(status);
-                } else {
-                    res.status(404).json({ error: 'Sorry, but requested todo was not found' });
-                } */
+        if (status) {
+            res.status(200).json(status);
+        } else {
+            res.status(404).json({ error: 'Sorry, but requested todo was not found' });
+        }
     });
 
 router.use('/:listId/todos', todo)
