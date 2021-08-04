@@ -17,7 +17,7 @@ router.route('/')
     })
     .post((req, res) => {
         controller
-            .createTodo(+req.params.listId, req.body.title)
+            .createTodo(+req.params.listId, req.body)
             .then(data => {
                 if (data.severity === 'ERROR') {
                     res.status(404).json({ error: 'Sorry, but requested list was not found' })

@@ -33,6 +33,7 @@ class ListController {
   removeListById(id) {
     return TodoModel.removeListById(id);
   }
+  
 }
 
 export default new ListController();

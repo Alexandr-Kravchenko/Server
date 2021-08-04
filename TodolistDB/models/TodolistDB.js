@@ -34,9 +34,10 @@ export default class TodolistModel {
         return result;
     }
 
-    async createTodo(id, title) {
+    async createTodo(id, body) {
         let result = await pool
-            .query('INSERT INTO todolist (id, title, done, listId) values (default, $1, false, $2) RETURNING *', [title, id])
+            .query('INSERT INTO todolist (id, title, done, listId, due_date) values (default, $1, false, $2, $3) RETURNING *',
+                [body.title, id, body.due_date])
             .then(res => res.rows)
             .catch(err => err)
         return result;
@@ -67,67 +68,37 @@ export default class TodolistModel {
         return result;
     }
 
-    async findTodoByIdAndUpdate(listId, todoId, todo) {
-        let done = this.getBool(todo.done);
-        if (todo.title) {
-            if (todo.done) {
-                let result = await pool
-                    .query('UPDATE todolist SET title=$1, done=$2 WHERE id=$3 AND listId=$4 RETURNING *',
-                        [todo.title, done, todoId, listId])
+    findTodoByIdAndUpdate(listId, todoId, todo) {
+        return this.findTodoById(listId, todoId).then(data => {
+            let foundTodo = data[0];
+            if(foundTodo) {
+                let tempTodo = {
+                    title: todo.title ?? foundTodo.title,
+                    done: todo.done ?? foundTodo.done,
+                    due_date: todo.due_date ?? foundTodo.due_date
+                }
+                return pool
+                    .query('UPDATE todolist SET title=$1, done=$2, due_date=$3 WHERE id=$4 AND listId=$5 RETURNING *',
+                        [tempTodo.title, tempTodo.done, tempTodo.due_date, todoId, listId])
                     .then(res => res.rows)
                     .catch(err => err)
-                return result;
             } else {
-                let result = await pool
-                    .query('UPDATE todolist SET title=$1 WHERE id=$2 AND listId=$3 RETURNING *',
-                        [todo.title, todoId, listId])
-                    .then(res => res.rows)
-                    .catch(err => err);
-                return result;
+                return data;
             }
-        } else if (todo.done) {
-            let result = await pool
-                .query('UPDATE todolist SET done=$1 WHERE id=$2 AND listId=$3 RETURNING *',
-                    [done, todoId, listId])
-                .then(res => res.rows)
-                .catch(err => err);
-            return result;
-        }
+        });
     }
 
     async findTodoByIdAndReplace(listId, todoId, todo) {
-        let done = this.getBool(todo.done);
-        if (todo.title) {
-            if (todo.done) {
-                let result = await pool
-                    .query('UPDATE todolist SET title=$1, done=$2 WHERE id=$3 AND listId=$4 RETURNING *',
-                        [todo.title, done, todoId, listId])
-                    .then(res => res.rows)
-                    .catch(err => err);
-                return result;
-            } else {
-                let result = await pool
-                    .query('UPDATE todolist SET title=$1, done=default WHERE id=$2 AND listId=$3 RETURNING *',
-                        [todo.title, todoId, listId])
-                    .then(res => res.rows)
-                    .catch(err => err);
-                return result;
-            }
-        } else if (todo.done) {
-            let result = await pool
-                .query('UPDATE todolist SET title=default, done=$1 WHERE id=$2 AND listId=$3 RETURNING *',
-                    [done, todoId, listId])
-                .then(res => res.rows)
-                .catch(err => err);
-            return result;
-        } else {
-            let result = await pool
-                .query('UPDATE todolist SET title=default, done=default WHERE id=$1 AND listId=$2 RETURNING *',
-                    [todoId, listId])
-                .then(res => res.rows)
-                .catch(err => err);
-            return result;
+        let tempTodo = {
+            title: todo.title ?? 'Default Title',
+            done: todo.done ?? false,
+            due_date: todo.due_date ?? '2021-08-20 13:00'
         }
+        return await pool
+            .query('UPDATE todolist SET title=$1, done=$2, due_date=$3 WHERE id=$4 AND listId=$5 RETURNING *',
+                [tempTodo.title, tempTodo.done, tempTodo.due_date, todoId, listId])
+            .then(res => res.rows)
+            .catch(err => err)
     }
 
     getBool(data) {
