@@ -12,23 +12,23 @@ class ListController {
   updateTodoById(listId, todoId, todo) {
     return TodoModel.findTodoByIdAndUpdate(listId, todoId, todo)
   }
+  findTodosCurrentDay() {
+    return TodoModel.findTodosCurrentDay()
+  }
   replaceTodoById(listId, todoId, todo) {
     return TodoModel.findTodoByIdAndReplace(listId, todoId, todo)
   }
   removeTodoById(listId, todoId) {
     return TodoModel.removeTodoById(listId, todoId);
   }
-  findAllTodoByListId(listId) {
-    return TodoModel.findAllTodoByListId(listId);
+  findAllTodoByListId(listId, all) {
+    return TodoModel.findAllTodoByListId(listId, all);
   }
   findAllLists() {
     return TodoModel.findAllLists()
   }
   createList(title) {
     return TodoModel.createList(title);
-  }
-  findListById(id) {
-    return TodoModel.findListById(id);
   }
   removeListById(id) {
     return TodoModel.removeListById(id);

@@ -29,16 +29,6 @@ router.route('/')
                         res.json(data);
                     }
                 })
-        } else if (req.query.listId) {
-            controller
-                .findListById(+req.query.listId)
-                .then(data => {
-                    if (data.length === 0) {
-                        res.status(404).json({ error: 'Sorry, but requested list was not found' })
-                    } else {
-                        res.json(data)
-                    }
-                })
         }
     })
     .post((req, res) => {

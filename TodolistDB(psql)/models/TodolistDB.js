@@ -27,13 +27,6 @@ export default class TodolistModel {
         return result;
     }
 
-    async findListById(id) {
-        let result = await pool
-            .query('SELECT * FROM lists WHERE id=$1', [id])
-            .then(res => res.rows);
-        return result;
-    }
-
     async createTodo(id, body) {
         let result = await pool
             .query('INSERT INTO todolist (id, title, done, listId, due_date) values (default, $1, false, $2, $3) RETURNING *',
@@ -51,12 +44,31 @@ export default class TodolistModel {
         return result;
     }
 
-    async findAllTodoByListId(listId) {
+    async findTodosCurrentDay() {
         let result = await pool
-            .query('SELECT * FROM todolist WHERE listId=$1', [listId])
-            .then(res => res.rows)
-            .catch(err => err);
+            .query(`SELECT todolist.id as idtodo, todolist.title as todoname, lists.id as listid, lists.title as listname
+                FROM todolist
+                left join lists on todolist.listid=lists.id
+                where todolist.due_date=$1`, [new Date()])
+            .then(res => res)
+            .catch(err => err)
         return result;
+    }
+
+    async findAllTodoByListId(listId, all) {
+        if (all) {
+            let result = await pool
+                .query('SELECT * FROM todolist WHERE listId=$1', [listId])
+                .then(res => res.rows)
+                .catch(err => err);
+            return result;
+        } else {
+            let result = await pool
+                .query('SELECT * FROM todolist WHERE listId=$1 AND done=false', [listId])
+                .then(res => res.rows)
+                .catch(err => err);
+            return result;
+        }
     }
 
 
@@ -71,7 +83,7 @@ export default class TodolistModel {
     findTodoByIdAndUpdate(listId, todoId, todo) {
         return this.findTodoById(listId, todoId).then(data => {
             let foundTodo = data[0];
-            if(foundTodo) {
+            if (foundTodo) {
                 let tempTodo = {
                     title: todo.title ?? foundTodo.title,
                     done: todo.done ?? foundTodo.done,
