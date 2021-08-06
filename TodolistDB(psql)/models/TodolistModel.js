@@ -2,31 +2,6 @@ import pool from '../db/index.js';
 
 export default class TodolistModel {
 
-    async createList(title) {
-        const result = await pool
-            .query('INSERT INTO lists (id, title) values(default, $1) RETURNING *', [title])
-            .then(res => res.rows)
-            .catch(err => err)
-        return result;
-    }
-
-    async removeListById(id) {
-        let listId = parseInt(id);
-        let result = await pool
-            .query('DELETE FROM lists where id=$1 RETURNING *', [listId])
-            .then(res => res.rows)
-            .catch(err => err)
-        return result;
-    }
-
-    async findAllLists() {
-        const result = await pool
-            .query('SELECT * FROM lists')
-            .then(res => res.rows)
-            .catch(err => err)
-        return result;
-    }
-
     async createTodo(id, body) {
         let result = await pool
             .query('INSERT INTO todolist (id, title, done, listId, due_date) values (default, $1, false, $2, $3) RETURNING *',
@@ -46,11 +21,11 @@ export default class TodolistModel {
 
     async findTodosCurrentDay() {
         let result = await pool
-            .query(`SELECT todolist.id as idtodo, todolist.title as todoname, lists.id as listid, lists.title as listname
+            .query(`SELECT todolist.id as todoid, todolist.title as todoname, lists.id as listid, lists.title as listname
                 FROM todolist
                 left join lists on todolist.listid=lists.id
                 where todolist.due_date=$1`, [new Date()])
-            .then(res => res)
+            .then(res => res.rows)
             .catch(err => err)
         return result;
     }
@@ -70,7 +45,6 @@ export default class TodolistModel {
             return result;
         }
     }
-
 
     async findTodoById(listId, todoId) {
         let result = await pool

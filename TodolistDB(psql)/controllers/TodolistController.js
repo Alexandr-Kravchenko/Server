@@ -1,8 +1,8 @@
-import TodolistModel from '../models/TodolistDB.js'
+import TodolistModel from '../models/TodolistModel.js'
 
 let TodoModel = new TodolistModel();
 
-class ListController {
+class TodolistController {
   createTodo(id, title) {
     return TodoModel.createTodo(id, title)
   }
@@ -24,16 +24,6 @@ class ListController {
   findAllTodoByListId(listId, all) {
     return TodoModel.findAllTodoByListId(listId, all);
   }
-  findAllLists() {
-    return TodoModel.findAllLists()
-  }
-  createList(title) {
-    return TodoModel.createList(title);
-  }
-  removeListById(id) {
-    return TodoModel.removeListById(id);
-  }
-  
 }
 
-export default new ListController();
+export default new TodolistController();

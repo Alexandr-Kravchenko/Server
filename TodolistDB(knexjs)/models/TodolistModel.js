@@ -2,32 +2,6 @@ import pg from '../db/index.js';
 
 export default class TodolistModel {
 
-    async createList(title) {
-        const result = await pg('lists')
-            .insert({ title })
-        return result;
-    }
-
-    async removeListById(id) {
-        let result = await pg('lists')
-            .where('id', id)
-            .del()
-        return result;
-    }
-
-    async findAllLists() {
-        const result = await pg.select('*').from('lists');
-        return result;
-    }
-
-    async findListById(id) {
-        let result = await pg
-            .select('*')
-            .from('lists')
-            .where('id', id)
-        return result;
-    }
-
     async createTodo(id, body) {
         let result = await pg('todolist')
             .insert({
@@ -45,11 +19,30 @@ export default class TodolistModel {
         return result;
     }
 
-    async findAllTodoByListId(listId) {
+    async findAllTodoByListId(listId, all) {
+        if (all) {
+            let result = await pg
+                .select('*')
+                .from('todolist')
+                .where('listid', listId)
+            return result;
+        } else {
+            let result = await pg
+                .select('*')
+                .from('todolist')
+                .where('listid', listId)
+                .andWhere('done', false)
+            return result;
+        }
+    }
+
+    async findTodosCurrentDay() {
         let result = await pg
-            .select('*')
+            .column([{ 'todoid': 'todolist.id' }, { 'todoname': 'todolist.title' }, { 'listid': 'lists.id' }, { 'listname': 'lists.title' }])
+            .select()
             .from('todolist')
-            .where('listid', listId)
+            .leftJoin('lists', 'todolist.listid', 'lists.id')
+            .where('todolist.due_date', new Date())
         return result;
     }
 

@@ -1,13 +1,14 @@
 import express from 'express';
-import controller from '../../controllers/ListController.js';
+import ListController from '../../controllers/ListController.js';
 import todos from './todos.js';
+import dashboard from './dashboard.js';
 
 const router = express.Router()
 
 router.route('/:listId?')
     .get((req, res) => {
         if (req.params.listId) {
-            controller
+            ListController
                 .findListById(+req.params.listId)
                 .then(data => {
                     if (data.length === 0) {
@@ -17,7 +18,7 @@ router.route('/:listId?')
                     }
                 })
         } else {
-            controller
+            ListController
                 .findAllLists()
                 .then(data => {
                     res.json(data)
@@ -25,14 +26,14 @@ router.route('/:listId?')
         }
     })
     .post((req, res) => {
-        controller
+        ListController
             .createList(req.body.title)
             .then(data => {
                 res.json({ status: 'List created' })
             })
     })
     .delete((req, res) => {
-        controller
+        ListController
             .removeListById(req.params.listId)
             .then(data => {
                 if (data === '0') {
@@ -44,5 +45,6 @@ router.route('/:listId?')
     });
 
 router.use('/:listId/todos', todos);
+router.use('/:listId/dashboard', dashboard);
 
 export default router;

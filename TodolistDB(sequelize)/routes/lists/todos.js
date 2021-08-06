@@ -1,12 +1,12 @@
 import express from 'express';
-import controller from '../../controllers/TodolistController.js';
+import TodolistController from '../../controllers/TodolistController.js';
 
 const router = express.Router({ mergeParams: true });
 
 router.route('/')
     .get((req, res) => {
-        controller
-            .findAllTodoByListId(+req.params.listId, req.query.all)
+        TodolistController
+            .findAllTodoByListId(+req.params.listId)
             .then(data => {
                 if (data.length === 0) {
                     res.status(404).json({ error: 'Sorry, but requested todo was not found' })
@@ -16,7 +16,7 @@ router.route('/')
             })
     })
     .post((req, res) => {
-        controller
+        TodolistController
             .createTodo(+req.params.listId, req.body)
             .then(data => {
                 res.json({ status: 'Todo created' })
@@ -25,7 +25,7 @@ router.route('/')
 
 router.route('/:todoId')
     .get((req, res) => {
-        controller
+        TodolistController
             .findTodoById(+req.params.listId, +req.params.todoId)
             .then(data => {
                 if (data.length === 0) {
@@ -36,7 +36,7 @@ router.route('/:todoId')
             })
     })
     .patch((req, res) => {
-        controller
+        TodolistController
             .updateTodoById(+req.params.listId, +req.params.todoId, req.body)
             .then(data => {
                 if (data.length === 0) {
@@ -47,7 +47,7 @@ router.route('/:todoId')
             })
     })
     .put((req, res) => {
-        controller
+        TodolistController
             .replaceTodoById(+req.params.listId, +req.params.todoId, req.body)
             .then(data => {
                 if (data.length === 0) {
@@ -58,7 +58,7 @@ router.route('/:todoId')
             })
     })
     .delete((req, res) => {
-        controller
+        TodolistController
             .removeTodoById(+req.params.listId, +req.params.todoId)
             .then(data => {
                 if (data.length === 0) {
