@@ -1,7 +1,6 @@
 import express from 'express';
 import ListController from '../../controllers/ListController.js';
 import todos from './todos.js';
-import dashboard from './dashboard.js';
 
 const router = express.Router()
 
@@ -45,6 +44,5 @@ router.route('/:listId?')
     });
 
 router.use('/:listId/todos', todos);
-router.use('/:listId/dashboard', dashboard);
 
 export default router;

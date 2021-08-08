@@ -1,6 +1,8 @@
 import Sequelize from "sequelize";
 import sequelize from "../db/index.js";
-const DataTypes = Sequelize.DataTypes
+import { todolist } from "./todolist.js";
+
+const DataTypes = Sequelize.DataTypes;
 
 const lists = sequelize.define('lists', {
     id: {
@@ -19,9 +21,22 @@ const lists = sequelize.define('lists', {
     updatedAt: false
 });
 
-lists.sync()
+lists.hasMany(todolist, {
+    foreignKey: {
+        name: 'id'
+    }
+});
 
-export default class ListModel {
+todolist.belongsTo(lists, {
+    foreignKey: {
+        name: 'listid'
+    }
+});
+
+
+// lists.sync()
+
+class ListModel {
 
     async createList(title) {
         const result = await lists.create({ title });
@@ -47,3 +62,5 @@ export default class ListModel {
         return result;
     }
 }
+
+export { ListModel, lists }

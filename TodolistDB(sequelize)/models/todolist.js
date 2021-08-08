@@ -1,5 +1,6 @@
 import Sequelize from "sequelize";
 import sequelize from "../db/index.js";
+import { lists } from "./lists.js";
 const DataTypes = Sequelize.DataTypes
 
 const todolist = sequelize.define('todolist', {
@@ -32,9 +33,7 @@ const todolist = sequelize.define('todolist', {
     updatedAt: false
 });
 
-todolist.sync();
-
-export default class TodolistModel {
+class TodolistModel {
 
     async createTodo(id, body) {
         let result = await todolist
@@ -57,17 +56,30 @@ export default class TodolistModel {
         return result;
     }
 
-    async findAllTodoByListId(listId) {
-        let result = await todolist
-            .findAll({
-                where: { listid: listId }
-            })
-        return result;
+    async findAllTodoByListId(listId, all) {
+        if (all) {
+            let result = await todolist
+                .findAll({
+                    where: {
+                        listid: listId
+                    }
+                })
+            return result;
+        } else {
+            let result = await todolist
+                .findAll({
+                    where: {
+                        listid: listId,
+                        done: false
+                    }
+                })
+            return result;
+        }
     }
 
     async findTodoById(listId, todoId) {
         let result = await todolist
-            .findAll({
+            .findOne({
                 where: {
                     listid: listId,
                     id: todoId
@@ -78,11 +90,16 @@ export default class TodolistModel {
 
     async findTodosCurrentDay() {
         let result = await todolist
-            .column([{ 'todoid': 'todolist.id' }, { 'todoname': 'todolist.title' }, { 'listid': 'lists.id' }, { 'listname': 'lists.title' }])
-            .select()
-            .from('todolist')
-            .leftJoin('lists', 'todolist.listid', 'lists.id')
-            .where('todolist.due_date', new Date())
+            .findAll({
+                where: {
+                    due_date: new Date(),
+                    done: false
+                },
+                include: {
+                    model: lists,
+                    attributes: ['title']
+                }
+            })
         return result;
     }
 
@@ -142,3 +159,5 @@ export default class TodolistModel {
     }
 
 }
+
+export { TodolistModel, todolist };

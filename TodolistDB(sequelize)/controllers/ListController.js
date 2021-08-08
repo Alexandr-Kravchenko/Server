@@ -1,4 +1,4 @@
-import ListModel from '../models/lists.js'
+import { ListModel } from '../models/lists.js'
 
 const List = new ListModel();
 

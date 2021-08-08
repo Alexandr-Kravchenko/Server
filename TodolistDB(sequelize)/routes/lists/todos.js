@@ -6,7 +6,7 @@ const router = express.Router({ mergeParams: true });
 router.route('/')
     .get((req, res) => {
         TodolistController
-            .findAllTodoByListId(+req.params.listId)
+            .findAllTodoByListId(+req.params.listId, req.query.all)
             .then(data => {
                 if (data.length === 0) {
                     res.status(404).json({ error: 'Sorry, but requested todo was not found' })

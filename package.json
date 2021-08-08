@@ -14,7 +14,9 @@
   },
   "dependencies": {
     "express": "^4.17.1",
-    "jest": "^27.0.6"
+    "jest": "^27.0.6",
+    "moment": "^2.29.1",
+    "pg": "^8.7.1"
   },
   "type": "module"
 }

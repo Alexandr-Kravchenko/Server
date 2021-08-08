@@ -1,4 +1,4 @@
-import TodolistModel from '../models/todolist.js';
+import { TodolistModel } from '../models/todolist.js';
 
 const TodoModel = new TodolistModel();
 
@@ -12,6 +12,9 @@ class TodolistController {
   findTodosCurrentDay() {
     return TodoModel.findTodosCurrentDay()
   }
+  findAllTodoByListId(listId, all) {
+    return TodoModel.findAllTodoByListId(listId, all);
+  }
   updateTodoById(listId, todoId, todo) {
     return TodoModel.findTodoByIdAndUpdate(listId, todoId, todo)
   }
@@ -20,9 +23,6 @@ class TodolistController {
   }
   removeTodoById(listId, todoId) {
     return TodoModel.removeTodoById(listId, todoId);
-  }
-  findAllTodoByListId(listId) {
-    return TodoModel.findAllTodoByListId(listId);
   }
 }
 
