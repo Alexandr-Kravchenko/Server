@@ -24,6 +24,9 @@ class TodolistController {
   findAllTodoByListId(listId, all) {
     return TodoModel.findAllTodoByListId(listId, all);
   }
+  getDashboard() {
+    return TodoModel.getDashboard();
+  }
 }
 
 export default new TodolistController();
