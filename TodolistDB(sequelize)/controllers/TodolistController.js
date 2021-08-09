@@ -24,6 +24,9 @@ class TodolistController {
   removeTodoById(listId, todoId) {
     return TodoModel.removeTodoById(listId, todoId);
   }
+  getDashboard() {
+    return TodoModel.getDashboard();
+  }
 }
 
 export default new TodolistController();

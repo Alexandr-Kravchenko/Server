@@ -16,6 +16,7 @@ const lists = sequelize.define('lists', {
 }, {
     sequelize,
     modelName: 'lists',
+    freezeTableName: true,
     timestamps: false,
     createdAt: false,
     updatedAt: false
@@ -33,8 +34,6 @@ todolist.belongsTo(lists, {
     }
 });
 
-
-// lists.sync()
 
 class ListModel {
 

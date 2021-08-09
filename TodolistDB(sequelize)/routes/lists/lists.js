@@ -28,7 +28,8 @@ router.route('/:listId?')
         ListController
             .createList(req.body.title)
             .then(data => {
-                res.json({ status: 'List created' })
+                console.log(data);
+                res.json({ status: 'List created', list: data.dataValues })
             })
     })
     .delete((req, res) => {

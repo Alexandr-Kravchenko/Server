@@ -1,7 +1,8 @@
-import Sequelize from "sequelize";
+import { Sequelize } from "sequelize";
 import sequelize from "../db/index.js";
 import { lists } from "./lists.js";
 const DataTypes = Sequelize.DataTypes
+const Op = Sequelize.Op;
 
 const todolist = sequelize.define('todolist', {
     id: {
@@ -57,7 +58,7 @@ class TodolistModel {
     }
 
     async findAllTodoByListId(listId, all) {
-        if (all) {
+        if (this.getBool(all)) {
             let result = await todolist
                 .findAll({
                     where: {
@@ -103,10 +104,47 @@ class TodolistModel {
         return result;
     }
 
+    async getDashboard() {
+
+        let amount = await todolist
+            .findAll({
+                where: {
+                    due_date: {
+                        [Op.between]: [new Date(), new Date()]
+                    }
+                },
+                attributes: [
+                    [sequelize.fn('COUNT', sequelize.col('*')), 'todos_for_today'],
+                ]
+            });
+
+        let listData = await todolist.findAll({
+            attributes: [
+                [sequelize.fn('COUNT', sequelize.col('*')), 'incomplete'],
+            ],
+            where: {
+                done: false
+            },
+            include: {
+                model: lists,
+                attributes: [
+                    ['id', 'list_id'],
+                    ['title', 'list_name'],
+                ],
+            },
+            group: ['list.id']
+
+        })
+
+        let result = amount.concat(listData);
+
+        return result;
+    }
+
     findTodoByIdAndUpdate(listId, todoId, todo) {
         return this.findTodoById(listId, todoId).then(data => {
-            let foundTodo = data[0];
-            if (foundTodo) {
+            if (data) {
+                let foundTodo = data.dataValues;
                 let tempTodo = {
                     title: todo.title ?? foundTodo.title,
                     done: todo.done ?? foundTodo.done,

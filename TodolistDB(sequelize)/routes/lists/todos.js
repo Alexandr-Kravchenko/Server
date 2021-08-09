@@ -9,7 +9,7 @@ router.route('/')
             .findAllTodoByListId(+req.params.listId, req.query.all)
             .then(data => {
                 if (data.length === 0) {
-                    res.status(404).json({ error: 'Sorry, but requested todo was not found' })
+                    res.status(404).json({ error: 'Sorry, but requested todo was not found or list is empty' })
                 } else {
                     res.json(data)
                 }
@@ -19,7 +19,7 @@ router.route('/')
         TodolistController
             .createTodo(+req.params.listId, req.body)
             .then(data => {
-                res.json({ status: 'Todo created' })
+                res.json({ status: 'Todo created', todo: data.dataValues })
             })
     });
 
@@ -39,7 +39,7 @@ router.route('/:todoId')
         TodolistController
             .updateTodoById(+req.params.listId, +req.params.todoId, req.body)
             .then(data => {
-                if (data.length === 0) {
+                if (!data) {
                     res.status(404).json({ error: 'Sorry, but requested todo was not found' })
                 } else {
                     res.json({ status: 'todo was updated' })
@@ -50,7 +50,7 @@ router.route('/:todoId')
         TodolistController
             .replaceTodoById(+req.params.listId, +req.params.todoId, req.body)
             .then(data => {
-                if (data.length === 0) {
+                if (!data) {
                     res.status(404).json({ error: 'Sorry, but requested todo was not found' })
                 } else {
                     res.json({ status: 'todo was updated' })
@@ -61,7 +61,7 @@ router.route('/:todoId')
         TodolistController
             .removeTodoById(+req.params.listId, +req.params.todoId)
             .then(data => {
-                if (data.length === 0) {
+                if (data === 0) {
                     res.status(404).json({ error: 'Sorry, but requested todo was not found' })
                 } else {
                     res.json({status: 'todo was deleted'})
