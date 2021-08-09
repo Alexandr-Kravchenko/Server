@@ -6,7 +6,7 @@ export default class TodolistModel {
         let result = await pg('todolist')
             .insert({
                 title: body.title,
-                due_date: body.due_date ?? '2021-09-11',
+                due_date: body.due_date ?? new Date(),
                 listid: id
             })
         return result;
@@ -20,7 +20,7 @@ export default class TodolistModel {
     }
 
     async findAllTodoByListId(listId, all) {
-        if (all) {
+        if (this.getBool(all)) {
             let result = await pg
                 .select('*')
                 .from('todolist')
@@ -34,6 +34,22 @@ export default class TodolistModel {
                 .andWhere('done', false)
             return result;
         }
+    }
+
+    async getDashboard() {
+        let count = await pg('todolist')
+            .count('*', { as: 'todos_for_today' })
+            .whereBetween('due_date', [new Date(), new Date()])
+        let lists = await pg
+            .column([{ list_id: 'lists.id'}, {list_name: 'lists.title'}])
+            .select()
+            .from('todolist')
+            .count('*', {as: 'incomplete'})
+            .rightJoin('lists', 'todolist.listid', 'lists.id')
+            .where('done', false)
+            .groupBy('lists.id');  
+        let result = count.concat(lists);
+        return result;
     }
 
     async findTodosCurrentDay() {
