@@ -7,23 +7,18 @@ router.route('/')
         controller
             .findAllTodoByListId(+req.params.listId, req.query.all)
             .then(data => {
-                if (data.length === 0) {
-                    res.status(404).json({ error: 'Sorry, but requested todo was not found' })
+                if (data.rows.length === 0) {
+                    res.status(404).json({ error: 'Sorry, but requested list was not found' })
                 } else {
-                    res.json(data)
+                    res.json(data.rows)
                 }
             })
     })
     .post((req, res) => {
         controller
             .createTodo(+req.params.listId, req.body)
-            .then(data => {
-                if (data.severity === 'ERROR') {
-                    res.status(404).json({ error: 'Sorry, but requested list was not found' })
-                } else {
-                    res.json(data)
-                }
-            })
+            .then(data => res.json(data))
+            .catch(err => res.status(400))
     });
 
 router.route('/:todoId')
@@ -31,10 +26,10 @@ router.route('/:todoId')
         controller
             .findTodoById(+req.params.listId, +req.params.todoId)
             .then(data => {
-                if (data.length === 0) {
+                if (data.rows.length === 0) {
                     res.status(404).json({ error: 'Sorry, but requested todo was not found' })
                 } else {
-                    res.json(data)
+                    res.json(data.rows[0])
                 }
             })
     })
@@ -42,10 +37,10 @@ router.route('/:todoId')
         controller
             .updateTodoById(+req.params.listId, +req.params.todoId, req.body)
             .then(data => {
-                if (data.length === 0) {
+                if (data.rows.length === 0) {
                     res.status(404).json({ error: 'Sorry, but requested todo was not found' })
                 } else {
-                    res.json(data)
+                    res.json(data.rows[0])
                 }
             })
     })
@@ -53,10 +48,10 @@ router.route('/:todoId')
         controller
             .replaceTodoById(+req.params.listId, +req.params.todoId, req.body)
             .then(data => {
-                if (data.length === 0) {
+                if (data.rows.length === 0) {
                     res.status(404).json({ error: 'Sorry, but requested todo was not found' })
                 } else {
-                    res.json(data)
+                    res.json(data.rows[0])
                 }
             })
     })
@@ -64,10 +59,10 @@ router.route('/:todoId')
         controller
             .removeTodoById(+req.params.listId, +req.params.todoId)
             .then(data => {
-                if (data.length === 0) {
+                if (data.rows.length === 0) {
                     res.status(404).json({ error: 'Sorry, but requested todo was not found' })
                 } else {
-                    res.json(data)
+                    res.json(data.rows[0])
                 }
             })
     });

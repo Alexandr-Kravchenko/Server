@@ -8,10 +8,10 @@ router.route('/today')
         controller
             .findTodosCurrentDay()
             .then(data => {
-                if(data.length === 0) {
+                if(data.rows.length === 0) {
                     res.json({status: 'You are free today'})
                 } else {
-                    res.json(data)
+                    res.json(data.rows)
                 }
             })
     })
