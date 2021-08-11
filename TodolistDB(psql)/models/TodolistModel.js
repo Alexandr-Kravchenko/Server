@@ -79,7 +79,7 @@ export default class TodolistModel {
         let tempTodo = {
             title: todo.title ?? 'Default Title',
             done: todo.done ?? false,
-            due_date: todo.due_date ?? '2021-08-20 13:00'
+            due_date: todo.due_date ?? new Date()
         }
         return await pool
             .query('UPDATE todolist SET title=$1, done=$2, due_date=$3 WHERE id=$4 AND listId=$5 RETURNING *',
