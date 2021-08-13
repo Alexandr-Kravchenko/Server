@@ -13,14 +13,14 @@ router.route('/')
                 } else {
                     res.json(data)
                 }
-            })
+            });
     })
     .post((req, res) => {
         controller
             .createTodo(+req.params.listId, req.body)
             .then(data => {
                 res.json({ status: 'Todo created' })
-            })
+            });
     });
 
 router.route('/:todoId')
@@ -33,7 +33,7 @@ router.route('/:todoId')
                 } else {
                     res.json(data)
                 }
-            })
+            });
     })
     .patch((req, res) => {
         controller
@@ -44,7 +44,7 @@ router.route('/:todoId')
                 } else {
                     res.json({ status: 'todo was updated' })
                 }
-            })
+            });
     })
     .put((req, res) => {
         controller
@@ -55,7 +55,7 @@ router.route('/:todoId')
                 } else {
                     res.json({ status: 'todo was updated' })
                 }
-            })
+            });
     })
     .delete((req, res) => {
         controller
@@ -66,7 +66,7 @@ router.route('/:todoId')
                 } else {
                     res.json({status: 'todo was deleted'})
                 }
-            })
+            });
     });
 
 export default router;

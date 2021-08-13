@@ -8,14 +8,14 @@ export default class TodolistModel {
                 title: body.title,
                 due_date: body.due_date ?? new Date(),
                 listid: id
-            })
+            });
         return result;
     }
 
     async removeTodoById(listId, todoId) {
         let result = await pg('todolist')
             .where({ id: todoId, listid: listId })
-            .del()
+            .del();
         return result;
     }
 
@@ -24,14 +24,14 @@ export default class TodolistModel {
             let result = await pg
                 .select('*')
                 .from('todolist')
-                .where('listid', listId)
+                .where('listid', listId);
             return result;
         } else {
             let result = await pg
                 .select('*')
                 .from('todolist')
                 .where('listid', listId)
-                .andWhere('done', false)
+                .andWhere('done', false);
             return result;
         }
     }
@@ -39,7 +39,7 @@ export default class TodolistModel {
     async getDashboard() {
         let count = await pg('todolist')
             .count('*', { as: 'todos_for_today' })
-            .whereBetween('due_date', [new Date(), new Date()])
+            .whereBetween('due_date', [new Date(), new Date()]);
         let lists = await pg
             .column([{ list_id: 'lists.id'}, {list_name: 'lists.title'}])
             .select()
@@ -58,7 +58,7 @@ export default class TodolistModel {
             .select()
             .from('todolist')
             .leftJoin('lists', 'todolist.listid', 'lists.id')
-            .where('todolist.due_date', new Date())
+            .where('todolist.due_date', new Date());
         return result;
     }
 
@@ -66,7 +66,7 @@ export default class TodolistModel {
         let result = await pg
             .select('*')
             .from('todolist')
-            .where({ listid: listId, id: todoId })
+            .where({ listid: listId, id: todoId });
         return result;
     }
 
@@ -85,7 +85,7 @@ export default class TodolistModel {
                         title: tempTodo.title,
                         done: this.getBool(tempTodo.done),
                         due_date: tempTodo.due_date,
-                    })
+                    });
             } else {
                 return data;
             }
@@ -104,7 +104,7 @@ export default class TodolistModel {
                 title: tempTodo.title,
                 done: tempTodo.done,
                 due_date: tempTodo.due_date,
-            })
+            });
     }
 
     getBool(data) {
@@ -115,7 +115,7 @@ export default class TodolistModel {
             return data.toLowerCase() === 'true' ? true :
                 data.toLowerCase() === 'false' ? false : false;
         } else {
-            return false
+            return false;
         }
     }
 

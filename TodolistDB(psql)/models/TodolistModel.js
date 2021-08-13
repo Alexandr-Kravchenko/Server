@@ -37,29 +37,31 @@ export default class TodolistModel {
     }
 
     async getDashboard() {
-        let count = await pool
+        let result = {};
+
+        result.count = await pool
             .query('SELECT COUNT(*) as todos_for_today FROM todolist WHERE due_date BETWEEN $1 AND $2', ['2021-08-09', '2021-08-15'])
-            .then(data => data.rows);
-        let lists = await pool
+            .then(data => data.rows[0].todos_for_today);
+        
+        result.lists = await pool
             .query(`SELECT lists.id as list_id, lists.title as list_name, COUNT(*) as incomplete
                     FROM todolist 
                     RIGTH JOIN lists ON listid=lists.id
                     WHERE done=false
                     GROUP BY lists.id`)
             .then(data => data.rows)
-        let result = count.concat(lists);
+
         return result;
     }
 
-    async findTodoById(listId, todoId) {
-        let result = await pool
+    findTodoById(listId, todoId) {
+        return pool
             .query('SELECT * FROM todolist WHERE id=$1 AND listId=$2', [todoId, listId])
-        return result;
+            .then(data => data.rows[0])
     }
 
     findTodoByIdAndUpdate(listId, todoId, todo) {
-        return this.findTodoById(listId, todoId).then(data => {
-            let foundTodo = data.rows[0];
+        return this.findTodoById(listId, todoId).then(foundTodo => {
             if (foundTodo) {
                 let tempTodo = {
                     title: todo.title ?? foundTodo.title,
