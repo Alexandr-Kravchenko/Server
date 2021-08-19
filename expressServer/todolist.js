@@ -1,9 +1,38 @@
-const express = require('express');
+import express from 'express';
 const app = express();
 
-app.use(express.json());
+// app.use(express.json());
 
-const inc = (init = 0) => () => ++init
+const middleware = function (req, _, next) {
+    if(req.method !== 'GET' && req.method !== 'DELETE' && req.is('application/json')) {
+        const data = [];
+        req.on('data', chunk => {
+            data.push(chunk.toString())
+        })
+        req.on('end', () => {
+            req.body = {};
+            data.forEach(element => {
+                req.body = Object.assign(req.body, JSON.parse(element));
+            });
+            next();
+        })
+    } else {
+        next();
+    }
+}
+
+app.use(middleware);
+
+app.post('/', (req, res) => {
+    res.json(req.body)
+});
+
+app.get('/', (req, res) => {
+    res.json(req.body)
+});
+
+
+/* const inc = (init = 0) => () => ++init
 
 const genId = inc();
 
@@ -16,10 +45,11 @@ const createTodo = data => {
         done: false
     }
 }
+ */
 
-app.get('/api/todoitem', (req, res) => {
+/* app.get('/api/todoitem', (req, res) => {
     res.json(todolist);
-});
+}); 
 
 app.get('/api/todoitem/:id', (req, res) => {
     res.json(todolist[req.params.id - 1]);
@@ -43,9 +73,9 @@ app.patch('/api/todoitem/:id', (req, res) => {
 });
 
 app.use('/*', (req, res) => {
-    res.status(404).json({error: 'Sorry, but the page with requested url is not exist'})
+    res.status(404).json({ error: 'Sorry, but the page with requested url is not exist' })
 })
-
+ */
 const port = 3000;
 
 app.listen(port, () => {
