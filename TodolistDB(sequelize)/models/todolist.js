@@ -78,6 +78,11 @@ class TodolistModel {
         }
     }
 
+    async findAllTodo() {
+        let result = await todolist.findAll();
+        return result;
+    }
+
     async findTodoById(listId, todoId) {
         let result = await todolist
             .findOne({

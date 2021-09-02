@@ -15,6 +15,9 @@ class TodolistController {
   findAllTodoByListId(listId, all) {
     return TodoModel.findAllTodoByListId(listId, all);
   }
+  findAllTodo() {
+    return TodoModel.findAllTodo();
+  }
   updateTodoById(listId, todoId, todo) {
     return TodoModel.findTodoByIdAndUpdate(listId, todoId, todo)
   }

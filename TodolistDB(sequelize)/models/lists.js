@@ -60,6 +60,7 @@ class ListModel {
         });
         return result;
     }
+
 }
 
 export { ListModel, lists }

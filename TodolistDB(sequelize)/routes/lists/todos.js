@@ -16,6 +16,7 @@ router.route('/')
             })
     })
     .post((req, res) => {
+        console.log(req.body);
         TodolistController
             .createTodo(+req.params.listId, req.body)
             .then(data => {
