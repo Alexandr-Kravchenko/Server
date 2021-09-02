@@ -6,6 +6,19 @@ import todos from './todos.js';
 
 const router = express.Router()
 
+router.route('/todos')
+    .get((req, res) => {
+        TodolistController
+            .findAllTodo()
+            .then (data => {
+                if (data === '0') {
+                    res.status(404).json({ error: 'Sorry, but requested list was not found' })
+                } else {
+                    res.json(data);
+                }
+            })
+    });
+
 router.route('/:listId?')
     .get((req, res) => {
         if (req.params.listId) {
@@ -47,20 +60,6 @@ router.route('/:listId?')
                 }
             })
     });
-
-router.route('/lists/todos')
-    .get((req, res) => {
-        console.log(req.body);
-        TodolistController
-            .findAllTodo()
-            .then (data => {
-                if (data === '0') {
-                    res.status(404).json({ error: 'Sorry, but requested list was not found' })
-                } else {
-                    res.json(data);
-                }
-            })
-    })
 
 router.use('/:listId/todos', todos);
 
