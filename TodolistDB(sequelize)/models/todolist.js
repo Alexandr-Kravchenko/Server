@@ -105,8 +105,8 @@ class TodolistModel {
     }
 
     async getDashboard() {
-
-        let amount = await todolist
+        let result = {}
+        result.amount = await todolist
             .findAll({
                 where: {
                     due_date: {
@@ -116,9 +116,11 @@ class TodolistModel {
                 attributes: [
                     [sequelize.fn('COUNT', sequelize.col('*')), 'todos_for_today'],
                 ]
+            }).then(data => {
+                return data[0].dataValues.todos_for_today
             });
 
-        let listData = await todolist.findAll({
+        result.listData = await todolist.findAll({
             attributes: [
                 [sequelize.fn('COUNT', sequelize.col('*')), 'incomplete'],
             ],
@@ -135,8 +137,6 @@ class TodolistModel {
             group: ['list.id']
 
         })
-
-        let result = amount.concat(listData);
 
         return result;
     }
