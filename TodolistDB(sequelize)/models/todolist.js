@@ -13,6 +13,10 @@ const todolist = sequelize.define('todolist', {
         type: DataTypes.STRING,
         defaultValue: 'Default Title'
     },
+    description: {
+        type: DataTypes.STRING,
+        defaultValue: 'Default Description'
+    },
     done: {
         type: DataTypes.BOOLEAN,
         defaultValue: false
@@ -40,6 +44,7 @@ class TodolistModel {
         let result = await todolist
             .create({
                 title: body.title,
+                description: body.description,
                 due_date: body.due_date,
                 listid: id
             });
@@ -79,7 +84,9 @@ class TodolistModel {
     }
 
     async findAllTodo() {
-        let result = await todolist.findAll();
+        let result = await todolist.findAll({
+            order: ['id']
+        });
         return result;
     }
 

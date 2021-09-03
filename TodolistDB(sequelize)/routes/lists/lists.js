@@ -14,6 +14,7 @@ router.route('/todos')
                 if (data === '0') {
                     res.status(404).json({ error: 'Sorry, but requested list was not found' })
                 } else {
+                    console.log(data);
                     res.json(data);
                 }
             })
