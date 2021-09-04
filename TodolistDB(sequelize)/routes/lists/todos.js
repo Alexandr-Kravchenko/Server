@@ -16,7 +16,6 @@ router.route('/')
             })
     })
     .post((req, res) => {
-        console.log(req.body);
         TodolistController
             .createTodo(+req.params.listId, req.body)
             .then(data => {
@@ -43,7 +42,6 @@ router.route('/:todoId')
                 if (!data) {
                     res.status(404).json({ error: 'Sorry, but requested todo was not found' })
                 } else {
-                    console.log(data);
                     res.json({ status: 'todo was updated' })
                 }
             })

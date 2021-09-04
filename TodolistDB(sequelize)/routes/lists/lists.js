@@ -14,7 +14,6 @@ router.route('/todos')
                 if (data === '0') {
                     res.status(404).json({ error: 'Sorry, but requested list was not found' })
                 } else {
-                    console.log(data);
                     res.json(data);
                 }
             })
@@ -44,13 +43,10 @@ router.route('/:listId?')
         ListController
             .createList(req.body.title)
             .then(data => {
-                console.log(data.dataValues);
                 res.json({ status: 'List created', list: data.dataValues })
             })
     })
     .delete((req, res) => {
-        console.log(req.params.listId);
-
         ListController
             .removeListById(req.params.listId)
             .then(data => {
